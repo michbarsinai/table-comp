@@ -1,0 +1,40 @@
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :bangbang:
+:important-caption: :exclamation:
+:note-caption: :point_right:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+
+# Table Web Component
+
+A very simple, JS only, table web component. It:
+
+. Displays an array of objects 
+. Has somewhat customizable columns
+. Automatically supports sortable columns (by clicking column headers or programmatically)
+. Has rows filter
+
+NOTE: Here's a http://mbarsinai.com/projects/table-comp/[demo].
+
+## Files of interest in this repo:
+
+[1,2]
+|===
+| File | Interest
+
+| link:index.html[]
+| Sample file showing how a table is used by client markup;
+
+| link:pageCode.js[]
+| Sample client code, showing how to enter data to the table, and how to set up its columns and filter.
+
+| link:table-comp.js[]
+| The table web component itself. Place this in your project where you store your `*.js` files, and consume it from there. Or from wherever you like, really, this project aims to be as least opinionated as possible.
+
+|==
+
+IMPORTANT: Default styling is provided by https://getbootstrap.com[Bootstrap]. Thanks, guys!
