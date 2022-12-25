@@ -10,7 +10,6 @@ class TableComp extends HTMLElement {
         const css = this.getAttribute("css");
         const cssEmt = document.createElement("link");
         cssEmt.rel="stylesheet";
-        cssEmt.crossorigin="anonymous";
         if ( (!css) || css.trim().length===0 ) {
             cssEmt.href = TableComp.DEFAULT_CSS_HREF;
         }
@@ -25,10 +24,11 @@ class TableComp extends HTMLElement {
         this.headerRow = document.createElement("tr");
         this.tableHeader.appendChild(this.headerRow);
 
-        this.tableEmt.classList.add("table");
-        this.tableEmt.classList.add("table-sm");
-        this.tableEmt.classList.add("table-striped");
-
+        const cssClasses = this.getAttribute("cssClasses");
+        for ( let cssClass of cssClasses.split(",")) {
+            this.tableEmt.classList.add(cssClass.trim());
+        }
+        
         this.shadowRoot.appendChild(this.tableEmt);
 
     }
@@ -46,7 +46,13 @@ class TableComp extends HTMLElement {
         if ( this.sortOrder && this.sortOrder.trim().length>0 ) {
             this.sortOrderColIdx = this._columns.map(c=>c.title).indexOf(this._sortOrder);
             const sorterFn = this._columns[this.sortOrderColIdx].extractorFn;
-            this.rows.sort( (a,b)=> this.sortOrderFactor*(String(sorterFn(a)).localeCompare(String(sorterFn(b)))) );
+            this.rows.sort( (a,b)=> {
+                const aVal = sorterFn(a);
+                const bVal = sorterFn(b);
+                const numericDiff = ( (typeof aVal === "number") && (typeof bVal === "number") );
+                const diff = numericDiff ? (aVal - bVal) : (String(aVal).localeCompare(bVal));
+                return this.sortOrderFactor*diff;
+            } );
 
         }
     }
@@ -86,7 +92,11 @@ class TableComp extends HTMLElement {
                 let tr = document.createElement("tr");
                 this._columns.forEach( col => {
                     let td = document.createElement("td");
-                    td.innerHTML = col.extractorFn(row);
+                    const value = col.extractorFn(row);
+                    td.innerHTML = value;
+                    if ( typeof value === "number") {
+                        td.style.textAlign = "right";
+                    }
                     tr.appendChild(td);
                 });
                 this.tableBody.appendChild(tr);

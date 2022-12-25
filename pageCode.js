@@ -35,7 +35,9 @@ function setupTable(){
         {firstName:"Milosh", lastName:"Kozmo", age:99 },
         {firstName:"Giovanni", lastName:"Scalante", age:17 },
         {firstName:"Jane", lastName:"Doe", age:43 },
-        {firstName:"Dane", lastName:"Joe", age:34 }
+        {firstName:"Dane", lastName:"Joe", age:34 },
+        {firstName:"T", lastName:"Rex", age:112 },
+        {firstName:"Baby", lastName:"Bonk", age:4 }
     ];
 }
 
