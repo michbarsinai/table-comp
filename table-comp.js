@@ -85,8 +85,8 @@ class TableComp extends HTMLElement {
 
         this.prepareRows();
 
-        // do the rows
-        if ( this.rows ) {
+        // add table rows
+        if ( this.rows && this.rows.length > 0 ) {
             this.updateSortArrow();
             this.rows.forEach( row => {
                 let tr = document.createElement("tr");
@@ -101,6 +101,8 @@ class TableComp extends HTMLElement {
                 });
                 this.tableBody.appendChild(tr);
             });
+        } else {
+            this.addNoDataRow();
         }
     }
 
