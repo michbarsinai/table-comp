@@ -45,7 +45,7 @@ class TableComp extends HTMLElement {
 
         if ( this.sortOrder && this.sortOrder.trim().length>0 ) {
             this.sortOrderColIdx = this._columns.map(c=>c.title).indexOf(this._sortOrder);
-            const sorterFn = this._columns[this.sortOrderColIdx].extractorFn;
+            const sorterFn = this._columns[this.sortOrderColIdx].valueFn;
             this.rows.sort( (a,b)=> {
                 const aVal = sorterFn(a);
                 const bVal = sorterFn(b);
@@ -92,7 +92,7 @@ class TableComp extends HTMLElement {
                 let tr = document.createElement("tr");
                 this._columns.forEach( col => {
                     let td = document.createElement("td");
-                    const value = col.extractorFn(row);
+                    const value = col.viewFn(row);
                     td.innerHTML = value;
                     if ( typeof value === "number") {
                         td.style.textAlign = "right";
@@ -133,8 +133,11 @@ class TableComp extends HTMLElement {
     set columns(colData) {
         this._columns = colData;
         this._columns.forEach( c => {
-            if ( !c.extractorFn ) {
-                c.extractorFn = (obj)=>obj[c.fieldName];
+            if ( ! c.valueFn ) {
+                c.valueFn = (obj)=>obj[c.fieldName];
+            }
+            if ( ! c.viewFn ) {
+                c.viewFn = c.valueFn;
             }
         });
         this.columnCount = Math.max(1, colData.length);
@@ -174,8 +177,8 @@ class TableComp extends HTMLElement {
         // make a filter function s.t. we're always operating on the same thing.
         if ( ! aFilter ) {
             this.filterFn = (e)=>true;
-        }
-        else if ( typeof aFilter === "function" ) {
+
+        } else if ( typeof aFilter === "function" ) {
             // User supplied an explicit filter.
             this.filterFn = aFilter;
         
@@ -183,7 +186,7 @@ class TableComp extends HTMLElement {
             // User provided a RegExp
             this.filterFn = function(row){
                 for ( let col of this._columns ){
-                    let shown = col.extractorFn(row);
+                    let shown = col.valueFn(row);
                     if ( aFilter.test(shown) ) {
                         return true;
                     }

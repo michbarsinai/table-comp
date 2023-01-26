@@ -17,6 +17,7 @@ A very simple, JS only, table web component. It:
 . Has somewhat customizable columns
 . Automatically supports sortable columns (by clicking column headers or programmatically)
 . Has rows filter
+. Each column can have a separate view (i.e. HTML) and sort/filter value (i.e. pure data).
 
 NOTE: Here's a http://mbarsinai.com/projects/table-comp/[demo].
 

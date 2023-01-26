@@ -21,11 +21,20 @@ function setupTable(){
         },
         {
             title: "Full Name",
-            extractorFn: (emt)=>emt.firstName + " " + emt.lastName
+            valueFn: (ent)=>ent.firstName + " " + ent.lastName
         },
         {
             title: "Age",
             fieldName: "age"
+        },
+        {
+            title: "Email",
+            viewFn: (ent)=>{
+                let r = Math.random()*200;
+                let email = `${ent.firstName}@${ent.lastName}.com`;
+                return `(${r}) <a href="mailto:${email}">${email}</a>`;
+            },
+            valueFn: (ent)=>ent.firstName
         }
     ];
     
