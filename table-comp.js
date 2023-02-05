@@ -1,7 +1,6 @@
 class TableComp extends HTMLElement {
     constructor() {
         super();
-        // read atts
         this.sortOrderFactor = 1;
     }
 
@@ -203,6 +202,17 @@ class TableComp extends HTMLElement {
 
     get filter() {
         return this._filter;
+    }
+
+    adoptFilterField( aField ) {
+        aField.addEventListener("keyup", (e)=>{
+            const data = aField.value.trim();
+            if ( data.length === 0 ) {
+                this.filter = null;
+            } else {
+                this.filter = data;
+            }
+        });
     }
 
 }

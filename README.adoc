@@ -13,13 +13,17 @@ endif::[]
 
 A very simple, JS only, table web component. It:
 
+NOTE: Here's a http://mbarsinai.com/projects/table-comp/[demo].
+
 . Displays an array of objects 
 . Has somewhat customizable columns
 . Automatically supports sortable columns (by clicking column headers or programmatically)
 . Has rows filter
 . Each column can have a separate view (i.e. HTML) and sort/filter value (i.e. pure data).
-
-NOTE: Here's a http://mbarsinai.com/projects/table-comp/[demo].
+. `noDataText` property to show when there'e no data to show.
+. `css` property to pull css data from a URL (defaults to Bootstrap because of course you do).
+. `cssClasses` property to set CSS classes on the generated table
+. `adoptFieldField( fieldInputElement )` method for easily adding text-field-based filtering to the table.
 
 ## Files of interest in this repo:
 
@@ -36,6 +40,47 @@ NOTE: Here's a http://mbarsinai.com/projects/table-comp/[demo].
 | link:table-comp.js[]
 | The table web component itself. Place this in your project where you store your `*.js` files, and consume it from there. Or from wherever you like, really, this project aims to be as least opinionated as possible.
 
-|==
+|===
+
+
+## Column Definition
+
+Columns are defined using an array of objects. These object describe the column: its title, what it should display, and what values should it use for filtering and sorting. Note that these may be different, as the display could contain any HTML, whereas the filtering and sorting should be done by data.
+
+### Column Object Properties
+
+`title`::
+    The title to show at the table's header.
+`fieldName`::
+    Convenience property. The name of the field to access when creating the cell's content or accessing the cell's value.
+`viewFn`::
+    A function that gets the row's object, and returns the HTML code to the cell. Overrides `fieldName`, if specified.
+`valueFn`::
+    A function that gets the row's object, and returns the value to be used for filtering and sorting.
+
+
+Example (assuming the data objects contain fields `age`, `firstName`, `lastName`);
+
+[source, javascript]
+----
+aTable.columns = [
+    {
+        title: "Age",       <.>
+        fieldName: "age"    <.>
+    },
+    {
+        title: "Suggested Email",
+        viewFn: (ent)=>{  <.>
+            let email = `${ent.firstName}@${ent.lastName}.com`;
+            return `<a href="mailto:${email}">${email}</a>`;
+        },
+        valueFn: (ent)=>ent.firstName  <.>
+    }
+];
+----
+<.> Setting the title for the column.
+<.> This column will display and filter by the `age` field.
+<.> Create a cell with a HTML element, based on the row's data.
+<.> Extract a value for this cell, to be used for filtering and sorting. Here, we ignore the last name and just use the first name.
 
 IMPORTANT: Default styling is provided by https://getbootstrap.com[Bootstrap]. Thanks, guys!
